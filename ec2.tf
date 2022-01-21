@@ -29,8 +29,8 @@ resource "aws_vpc" "prod-vpc" {
 resource "aws_internet_gateway" "gw" {
   vpc_id = aws_vpc.prod-vpc.id
 
-
 }
+
 # 3. Create Custom Route Table
 
 resource "aws_route_table" "prod-route-table" {
@@ -126,10 +126,6 @@ resource "aws_eip" "one" {
   depends_on                = [aws_internet_gateway.gw, aws_instance.web-server-instance]
 }
 
-output "server_public_ip" {
-  value = aws_eip.one.public_ip
-}
-
 # 9. Create Ubuntu server and install/enable apache2
 
 resource "aws_instance" "web-server-instance" {
@@ -145,8 +141,8 @@ resource "aws_instance" "web-server-instance" {
 
   user_data = <<-EOF
                 #!/bin/bash
-                sudo apt update -y
-                sudo apt install apache2 -y
+                sudo apt-get update -y
+                sudo apt-get install apache2 -y
                 sudo systemctl start apache2
                 # sudo bash -c 'echo your very first web server > /var/www/html/index.html'
                 EOF
@@ -162,4 +158,8 @@ output "server_private_ip" {
 
 output "server_id" {
   value = aws_instance.web-server-instance.id
+}
+
+output "server_public_ip" {
+  value = aws_eip.one.public_ip
 }
