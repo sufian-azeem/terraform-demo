@@ -151,26 +151,6 @@ resource "aws_instance" "web-server-instance" {
   }
 }
 
-
-resource "aws_instance" "web-server-instance-2" {
-  ami               = var.ami_image
-  instance_type     = "t2.micro"
-  availability_zone = var.availability_zone
-  key_name          = "dev"
-
-  user_data = <<-EOF
-                #!/bin/bash
-                sudo apt-get update -y
-                sudo apt-get install apache2 -y
-                sudo systemctl start apache2
-                # sudo bash -c 'echo your very first web server > /var/www/html/index.html'
-                EOF
-
-  tags = {
-    Name = "web-server-2"
-  }
-}
-
 output "server_private_ip" {
   value = aws_instance.web-server-instance.private_ip
 
@@ -181,8 +161,4 @@ output "server_id" {
 
 output "server_public_ip" {
   value = aws_eip.one.public_ip
-}
-
-output "server_2_public_ip" {
-  value = aws_instance.web-server-instance-2.public_ip
 }
